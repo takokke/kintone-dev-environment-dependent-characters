@@ -8,7 +8,7 @@ npm --version
 
 ## 型情報の取得・更新
 ```
-npx kintone-dts-gen --base-url https://devreptiles.cybozu.com \
+npx kintone-dts-gen --base-url https://**/.cybozu.com \
                                     -u ユーザー名 \
                                     -p パスワード \
                                     --app-id 1202
@@ -18,5 +18,5 @@ npx kintone-dts-gen --base-url https://devreptiles.cybozu.com \
 
 ```
 kintone-customize-uploader \
-  --base-url https://devreptiles.cybozu.com --username ユーザー名 --password パスワード dest/customize-manifest.json
+  --base-url https://**/.cybozu.com --username ユーザー名 --password パスワード dest/customize-manifest.json
 ```

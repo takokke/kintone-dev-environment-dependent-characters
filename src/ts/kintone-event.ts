@@ -41,52 +41,58 @@ import { KintoneRestAPIClient, KintoneRecordField } from "@kintone/rest-api-clie
     // レコード詳細画面において、環境依存文字を含むフィールドを黄色にする
     // まずは、全種類のフィールドを取得する必要がある。
     kintone.events.on("app.record.detail.show", (event: KintoneEvent)=> {
-        const record = event.record;
 
-        try {
-            // フィールド名を配列で定義
-            const fieldCodes: (keyof kintone.types.SavedFields)[] = [
-                '文字列__複数行_', 
-                '文字列__1行_', 
-                '文字列__1行__0',
-            ];
+        const checkFieldsWithDelay = () => {
+            try {
+                const record = event.record;
+                // フィールド名を配列で定義
+                const fieldCodes: (keyof kintone.types.SavedFields)[] = [
+                    '文字列__複数行_', 
+                    '文字列__1行_', 
+                    '文字列__1行__0',
+                ];
 
-            fieldCodes.forEach(fieldCode => {
-                const fieldValue = record[fieldCode]?.value;
-            
-                console.log(`フィールド名: ${fieldCode}, 値: ${fieldValue}, 型: ${typeof fieldValue}`);
-            
-                if (fieldValue == null || typeof fieldValue !== 'string') {
-                    console.log(`${fieldCode} は値がnullまたは文字列ではありません。`);
-                    return;
-                }
+                fieldCodes.forEach(fieldCode => {
+                    const fieldValue = record[fieldCode]?.value;
                 
-                const containsNonJIS = containsNonJISCharacters(fieldValue);
-                const containsSpecialChar = fieldValue.includes("[縺]");
-            
-                console.log(`フィールド名: ${fieldCode}, Non-JIS: ${containsNonJIS}, 特殊文字: ${containsSpecialChar}`);
-            
-                if (containsNonJIS || containsSpecialChar) {
-                    let fieldElement = kintone.app.record.getFieldElement(fieldCode);
-                    if (fieldElement === null) {
-                        throw new Error(`フィールド "${fieldCode}" が見つかりません`);
+                    console.log(`フィールド名: ${fieldCode}, 値: ${fieldValue}, 型: ${typeof fieldValue}`);
+                
+                    if (fieldValue == null || typeof fieldValue !== 'string') {
+                        console.log(`${fieldCode} は値がnullまたは文字列ではありません。`);
+                        return;
                     }
-                    fieldElement.style.backgroundColor = 'yellow';
-                }
-            });
+                    
+                    const containsNonJIS = containsNonJISCharacters(fieldValue);
+                    const containsSpecialChar = fieldValue.includes("[縺]");
+                
+                    console.log(`フィールド名: ${fieldCode}, Non-JIS: ${containsNonJIS}, 特殊文字: ${containsSpecialChar}`);
+                
+                    if (containsNonJIS || containsSpecialChar) {
+                        let fieldElement = kintone.app.record.getFieldElement(fieldCode);
+                        if (fieldElement === null) {
+                            throw new Error(`フィールド "${fieldCode}" が見つかりません`);
+                        }
+                        fieldElement.style.backgroundColor = 'yellow';
+                    }
+                });
 
-        } catch (err) {
-            if (err instanceof Error) {
-                console.error(err);
-                alert(err.message);
-            } else {
-                console.error(err);
-                alert("An unknown error occurred");
+            } catch (err) {
+                if (err instanceof Error) {
+                    console.error(err);
+                    alert(err.message);
+                } else {
+                    console.error(err);
+                    alert("An unknown error occurred");
+                }
             }
+
         }
+
+        // 500ミリ秒後に処理を実行
+        setTimeout(checkFieldsWithDelay, 100);
+
         return event;
     })
-
     // レコード一覧画面
     // 置き換えボタンを表示
     kintone.events.on("app.record.index.show", (event) => {

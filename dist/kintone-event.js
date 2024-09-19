@@ -39,41 +39,45 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
   // レコード詳細画面において、環境依存文字を含むフィールドを黄色にする
   // まずは、全種類のフィールドを取得する必要がある。
   kintone.events.on("app.record.detail.show", function (event) {
-    var record = event.record;
-    try {
-      // フィールド名を配列で定義
-      var fieldCodes = ['文字列__複数行_', '文字列__1行_', '文字列__1行__0'];
-      fieldCodes.forEach(function (fieldCode) {
-        var _record$fieldCode;
-        var fieldValue = (_record$fieldCode = record[fieldCode]) === null || _record$fieldCode === void 0 ? void 0 : _record$fieldCode.value;
-        console.log("\u30D5\u30A3\u30FC\u30EB\u30C9\u540D: ".concat(fieldCode, ", \u5024: ").concat(fieldValue, ", \u578B: ").concat(_typeof(fieldValue)));
-        if (fieldValue == null || typeof fieldValue !== 'string') {
-          console.log("".concat(fieldCode, " \u306F\u5024\u304Cnull\u307E\u305F\u306F\u6587\u5B57\u5217\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002"));
-          return;
-        }
-        var containsNonJIS = containsNonJISCharacters(fieldValue);
-        var containsSpecialChar = fieldValue.includes("[縺]");
-        console.log("\u30D5\u30A3\u30FC\u30EB\u30C9\u540D: ".concat(fieldCode, ", Non-JIS: ").concat(containsNonJIS, ", \u7279\u6B8A\u6587\u5B57: ").concat(containsSpecialChar));
-        if (containsNonJIS || containsSpecialChar) {
-          var fieldElement = kintone.app.record.getFieldElement(fieldCode);
-          if (fieldElement === null) {
-            throw new Error("\u30D5\u30A3\u30FC\u30EB\u30C9 \"".concat(fieldCode, "\" \u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093"));
+    var checkFieldsWithDelay = function checkFieldsWithDelay() {
+      try {
+        var record = event.record;
+        // フィールド名を配列で定義
+        var fieldCodes = ['文字列__複数行_', '文字列__1行_', '文字列__1行__0'];
+        fieldCodes.forEach(function (fieldCode) {
+          var _record$fieldCode;
+          var fieldValue = (_record$fieldCode = record[fieldCode]) === null || _record$fieldCode === void 0 ? void 0 : _record$fieldCode.value;
+          console.log("\u30D5\u30A3\u30FC\u30EB\u30C9\u540D: ".concat(fieldCode, ", \u5024: ").concat(fieldValue, ", \u578B: ").concat(_typeof(fieldValue)));
+          if (fieldValue == null || typeof fieldValue !== 'string') {
+            console.log("".concat(fieldCode, " \u306F\u5024\u304Cnull\u307E\u305F\u306F\u6587\u5B57\u5217\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3002"));
+            return;
           }
-          fieldElement.style.backgroundColor = 'yellow';
+          var containsNonJIS = containsNonJISCharacters(fieldValue);
+          var containsSpecialChar = fieldValue.includes("[縺]");
+          console.log("\u30D5\u30A3\u30FC\u30EB\u30C9\u540D: ".concat(fieldCode, ", Non-JIS: ").concat(containsNonJIS, ", \u7279\u6B8A\u6587\u5B57: ").concat(containsSpecialChar));
+          if (containsNonJIS || containsSpecialChar) {
+            var fieldElement = kintone.app.record.getFieldElement(fieldCode);
+            if (fieldElement === null) {
+              throw new Error("\u30D5\u30A3\u30FC\u30EB\u30C9 \"".concat(fieldCode, "\" \u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093"));
+            }
+            fieldElement.style.backgroundColor = 'yellow';
+          }
+        });
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error(err);
+          alert(err.message);
+        } else {
+          console.error(err);
+          alert("An unknown error occurred");
         }
-      });
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(err);
-        alert(err.message);
-      } else {
-        console.error(err);
-        alert("An unknown error occurred");
       }
-    }
+    };
+
+    // 500ミリ秒後に処理を実行
+    setTimeout(checkFieldsWithDelay, 100);
     return event;
   });
-
   // レコード一覧画面
   // 置き換えボタンを表示
   kintone.events.on("app.record.index.show", function (event) {
