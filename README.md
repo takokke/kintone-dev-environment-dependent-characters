@@ -2,6 +2,6 @@
 ```
 npx kintone-dts-gen --base-url https://devreptiles.cybozu.com \
                                     -u user0004 \
-                                    -p STTS-909 \
+                                    -p パスワード \
                                     --app-id 1202
 ```
