@@ -1,0 +1,12 @@
+{
+    "app": "1202",
+    "scope": "ALL",
+    "desktop": {
+        "js": ["dist/kintone-event.js"],
+        "css": []
+    },
+    "mobile": {
+        "js": [],
+        "css": []
+    }
+}
