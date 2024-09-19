@@ -1,3 +1,5 @@
+// kintone-dts-genで作られる型
+// これを見て、KitoneRestClientの型を決める
 declare namespace kintone.types {
   interface Fields {
     文字列__複数行_: kintone.fieldTypes.MultiLineText;

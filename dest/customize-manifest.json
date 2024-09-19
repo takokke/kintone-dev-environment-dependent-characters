@@ -2,8 +2,11 @@
     "app": "1202",
     "scope": "ALL",
     "desktop": {
-        "js": ["dist/kintone-event.js"],
-        "css": []
+        "js": [
+            "dist/kintone-event.js",
+            "dist/vendors-node_modules_kintone_rest-api-client_lib_src_index_browser_js.js"
+        ],
+        "css": ["src/css/kintone-button.css"]
     },
     "mobile": {
         "js": [],
