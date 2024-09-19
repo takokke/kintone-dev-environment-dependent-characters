@@ -31,6 +31,8 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 
   // 環境依存文字をチェックする関数
   var containsNonJISCharacters = function containsNonJISCharacters(input) {
+    /* 定数の定義*/
+    var nonJISRegex = /[^\u0020-\u007E\u00A1-\u00DF\uFF61-\uFF9F\uFF61-\uFF9F\u3041-\u3093\u30A1-\u30F6\u4E00-\u9FA0\u3000-\u303F\uFF01-\uFF5E]/g;
     return nonJISRegex.test(input);
   };
 
@@ -43,7 +45,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
       try {
         var record = event.record;
         // フィールド名を配列で定義
-        var fieldCodes = ['文字列__複数行_', '文字列__1行_', '文字列__1行__0'];
+        var fieldCodes = ['文字列__複数行_', '文字列__1行_', '文字列__1行__0', '文字列__1行__1'];
         fieldCodes.forEach(function (fieldCode) {
           var _record$fieldCode;
           var fieldValue = (_record$fieldCode = record[fieldCode]) === null || _record$fieldCode === void 0 ? void 0 : _record$fieldCode.value;
@@ -114,7 +116,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
             getAllRecordsResp = _context.sent;
             _context.next = 14;
             return getAllRecordsResp.filter(function (record) {
-              return nonJISRegex.test(record.文字列__複数行_.value) || nonJISRegex.test(record.文字列__1行_.value) || nonJISRegex.test(record.文字列__1行__0.value);
+              return nonJISRegex.test(record.文字列__複数行_.value) || nonJISRegex.test(record.文字列__1行_.value) || nonJISRegex.test(record.文字列__1行__0.value) || nonJISRegex.test(record.文字列__1行__1.value);
             });
           case 14:
             targetRecords = _context.sent;
@@ -132,6 +134,9 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
                   },
                   文字列__1行__0: {
                     value: replaceNonJISCharacters(record.文字列__1行__0.value)
+                  },
+                  文字列__1行__1: {
+                    value: replaceNonJISCharacters(record.文字列__1行__1.value)
                   }
                 }
               };

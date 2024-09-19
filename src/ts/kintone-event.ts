@@ -16,6 +16,8 @@ import { KintoneRestAPIClient, KintoneRecordField } from "@kintone/rest-api-clie
 
     // 環境依存文字をチェックする関数
     const containsNonJISCharacters =  (input: string)=>{
+        /* 定数の定義*/
+        const nonJISRegex = /[^\u0020-\u007E\u00A1-\u00DF\uFF61-\uFF9F\uFF61-\uFF9F\u3041-\u3093\u30A1-\u30F6\u4E00-\u9FA0\u3000-\u303F\uFF01-\uFF5E]/g;
       
        return nonJISRegex.test(input);
     }
@@ -36,6 +38,7 @@ import { KintoneRestAPIClient, KintoneRecordField } from "@kintone/rest-api-clie
         文字列__複数行_: KintoneRecordField.MultiLineText;
         文字列__1行_: KintoneRecordField.SingleLineText;
         文字列__1行__0: KintoneRecordField.SingleLineText;
+        文字列__1行__1: KintoneRecordField.SingleLineText;
     }
 
     // レコード詳細画面において、環境依存文字を含むフィールドを黄色にする
@@ -50,6 +53,7 @@ import { KintoneRestAPIClient, KintoneRecordField } from "@kintone/rest-api-clie
                     '文字列__複数行_', 
                     '文字列__1行_', 
                     '文字列__1行__0',
+                    '文字列__1行__1',
                 ];
 
                 fieldCodes.forEach(fieldCode => {
@@ -130,7 +134,8 @@ import { KintoneRestAPIClient, KintoneRecordField } from "@kintone/rest-api-clie
                 const targetRecords = await getAllRecordsResp.filter((record) => {
                     return nonJISRegex.test(record.文字列__複数行_.value) || 
                         nonJISRegex.test(record.文字列__1行_.value) || 
-                        nonJISRegex.test(record.文字列__1行__0.value);
+                        nonJISRegex.test(record.文字列__1行__0.value) ||
+                        nonJISRegex.test(record.文字列__1行__1.value);
                 });
 
                 console.log(targetRecords);
@@ -150,6 +155,9 @@ import { KintoneRestAPIClient, KintoneRecordField } from "@kintone/rest-api-clie
                             },
                             文字列__1行__0: {
                                 value: replaceNonJISCharacters(record.文字列__1行__0.value)
+                            },
+                            文字列__1行__1: {
+                                value: replaceNonJISCharacters(record.文字列__1行__1.value)
                             }
                         }
                     };
